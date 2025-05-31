@@ -13,13 +13,18 @@ public class EnemyController : MonoBehaviour, IDamageable
         currentHealth = maxHealth;
     }
 
-    public void TakeDamage(float damage){
+    public void TakeDamage(float damage)
+    {
         animator.SetTrigger("Hit");
         currentHealth -= damage;
+        if (currentHealth <= 0)
+        {
+            Die ();
+        }
     }
 
     public void Die(){
-        animator.SetTrigger("Death");
+        animator.SetTrigger("isDead");
     }
 
     public float GetHealth(){

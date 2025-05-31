@@ -13,4 +13,13 @@ public class DamageEnemies : MonoBehaviour
     {
         
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+     IDamageable damageable = other.GetComponent<IDamageable>();
+     if (damageable != null){
+        damageable.TakeDamage(5);
+        Debug.Log(damageable.GetHealth());
+     }   
+    }
 }

@@ -32,31 +32,31 @@ public class PlayerController : MonoBehaviour
         // Check if the player is touching the ground
         isGrounded = controller.isGrounded;
 
-        // Get input axes for movement
-        float moveX = Input.GetAxis("Horizontal");
-        float moveZ = Input.GetAxis("Vertical");
+        // // Get input axes for movement
+        // float moveX = Input.GetAxis("Horizontal");
+        // float moveZ = Input.GetAxis("Vertical");
 
-        // Create a normalized direction vector from input
-        Vector3 inputDir = new Vector3(moveX, 0, moveZ).normalized;
+        // // Create a normalized direction vector from input
+        // Vector3 inputDir = new Vector3(moveX, 0, moveZ).normalized;
 
-        // Only process movement and rotation if there's input
-        if (inputDir.magnitude >= 0.1f)
-        {
-            // Calculate the direction relative to the camera's current Y rotation
-            float targetAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+        // // Only process movement and rotation if there's input
+        // if (inputDir.magnitude >= 0.1f)
+        // {
+        //     // Calculate the direction relative to the camera's current Y rotation
+        //     float targetAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
 
-            // Smooth the rotation to avoid instant snapping
-            float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+        //     // Smooth the rotation to avoid instant snapping
+        //     float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
 
-            // Rotate the player toward the target angle
-            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+        //     // Rotate the player toward the target angle
+        //     transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
 
-            // Calculate movement direction based on the target angle
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+        //     // Calculate movement direction based on the target angle
+        //     Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
 
-            // Move the player using the CharacterController
-            controller.Move(moveDir.normalized * speed * Time.deltaTime);
-        }
+        //     // Move the player using the CharacterController
+        //     controller.Move(moveDir.normalized * speed * Time.deltaTime);
+        // }
 
         // If grounded and falling down, apply a small downward force
         // This keeps the player "snapped" to the ground instead of slightly floating
@@ -82,6 +82,35 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             jumps = 2;
+        }
+
+        private void CalculateMoveRot()
+        {
+                // Get input axes for movement
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
+
+        // Create a normalized direction vector from input
+        Vector3 inputDir = new Vector3(moveX, 0, moveZ).normalized;
+
+        // Only process movement and rotation if there's input
+        if (inputDir.magnitude >= 0.1f)
+        {
+            // Calculate the direction relative to the camera's current Y rotation
+            float targetAngle = Mathf.Atan2(inputDir.x, inputDir.z) * Mathf.Rad2Deg + cameraTransform.eulerAngles.y;
+
+            // Smooth the rotation to avoid instant snapping
+            float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, 0.1f);
+
+            // Rotate the player toward the target angle
+            transform.rotation = Quaternion.Euler(0f, smoothAngle, 0f);
+
+            // Calculate movement direction based on the target angle
+            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f) * Vector3.forward;
+
+            // Move the player using the CharacterController
+            controller.Move(moveDir.normalized * speed * Time.deltaTime);
+        }
         }
     }
 }

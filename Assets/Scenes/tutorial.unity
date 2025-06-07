@@ -1298,6 +1298,14 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: 0.7
       objectReference: {fileID: 0}
+    - target: {fileID: 4318084233975783187, guid: fa952cc1b0a551c47a10320297a8b130, type: 3}
+      propertyPath: m_IncludeLayers.m_Bits
+      value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 4318084233975783187, guid: fa952cc1b0a551c47a10320297a8b130, type: 3}
+      propertyPath: m_LayerOverridePriority
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5955489011301910677, guid: fa952cc1b0a551c47a10320297a8b130, type: 3}
       propertyPath: m_Name
       value: character 1

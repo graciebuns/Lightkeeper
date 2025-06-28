@@ -8,12 +8,13 @@ public class PlayerController : MonoBehaviour
     public float gravity = -9.81f; // Gravity force applied to the player
     public float jumpHeight = 2f; // Height the player can jump
     private Transform cameraTransform; // Reference to the main camera (used for movement direction)
+    public int playerDamage;
 
     private CharacterController controller; // CharacterController component for handling collisions and movement
     private Vector3 velocity; // Stores vertical velocity for jumping and gravity
     private bool isGrounded; // Checks if the player is on the ground
     private float turnSmoothVelocity; // Used to smooth the turning of the player
-    public Animator swordAnimator;
+    public Animator playerAnimator;
     public List <GameObject> enemyList = new List<GameObject>();
 
     private int jumps = 2;
@@ -21,8 +22,8 @@ public class PlayerController : MonoBehaviour
     void Awake()
     {
         controller = GetComponent<CharacterController>(); // Get the CharacterController component
-        Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
-        Cursor.visible = false; // Hide the cursor
+        //Cursor.lockState = CursorLockMode.Locked; // Lock the cursor to the center of the screen
+        //Cursor.visible = false; // Hide the cursor
 
     }
 
@@ -67,7 +68,12 @@ public class PlayerController : MonoBehaviour
         if (isGrounded)
         {
             jumps = 2;
+            playerAnimator.SetBool("Grounded",isGrounded);
+
         }
+        else
+            playerAnimator.SetBool("Grounded", false);
+
 
         void CalculateMoveRot()
         {
@@ -98,21 +104,65 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-
-        void Attack()
+         void Attack()
         {
-            swordAnimator.SetTrigger("isAttacking");
-
+            HandleAnimation("Attack");
             foreach (var enemy in enemyList)
             {
                 IDamageable damageable = enemy.GetComponent<IDamageable>();
 
                 if (damageable != null)
                 {
-                    damageable.TakeDamage(100);
+                    damageable.TakeDamage(playerDamage);
                     Debug.Log(damageable.GetHealth());
                 }
             }
         }
+
+        void HandleAnimation(string animationString)
+        {
+            switch (animationString)
+            {
+                case "Run":
+                    if (isGrounded)
+                    {
+                        playerAnimator.SetBool("isMoving", true);
+                        playerAnimator.SetBool("isJumping", false);
+                    }
+                    else
+                    {
+                        playerAnimator.SetBool("isMoving", false);
+                    }
+                    break;
+                case "Jump":
+                    playerAnimator.SetBool("isMoving", false);
+                    playerAnimator.SetBool("isJumping", true);
+                    break;
+                case "Attack":
+                    playerAnimator.SetBool("isMoving", false);
+                    playerAnimator.SetBool("isJumping", false);
+                    playerAnimator.SetTrigger("isAttacking");
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    void Attack()
+        {
+        //swordAnimator.SetTrigger("isAttacking");
+
+        foreach (var enemy in enemyList)
+        {
+            IDamageable damageable = enemy.GetComponent<IDamageable>();
+
+            if (damageable != null)
+            {
+                damageable.TakeDamage(100);
+                Debug.Log(damageable.GetHealth());
+            }
+        }
+        
     }
 }

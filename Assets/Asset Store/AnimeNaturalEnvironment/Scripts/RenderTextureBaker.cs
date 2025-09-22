@@ -92,8 +92,9 @@ public class RenderTextureBaker : MonoBehaviour
 
     void UpdateCamera(ScriptableRenderContext SRC, Camera camera)
     {
-       // Unity reverted the obsolete status and RenderSingleCamera will soon be usable again while they are looking for a better solution.
-        UniversalRenderPipeline.RenderSingleCamera(SRC, camToDrawWith);
+        // Unity reverted the obsolete status and RenderSingleCamera will soon be usable again while they are looking for a better solution.
+        UniversalRenderPipeline.RenderSingleCamera(SRC, camera);
+
     }
 
     void DrawToMap(string target)
@@ -113,7 +114,11 @@ public class RenderTextureBaker : MonoBehaviour
         Shader.SetGlobalFloat("TB_FARCLIP", camToDrawWith.farClipPlane);
 
         //camToDrawWith.Render();
-        RenderPipeline.beginCameraRendering += UpdateCamera; ;
+        void UpdateCamera(ScriptableRenderContext SRC, Camera camera)
+        {
+            // Use this fallback for older Unity/URP versions
+            UnityEngine.Rendering.Universal.UniversalRenderPipeline.RenderSingleCamera(SRC, camera);
+        }
 
         Shader.SetGlobalTexture(target, tempTex);
         camToDrawWith.enabled = false;
